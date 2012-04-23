@@ -704,6 +704,7 @@ private:
   void WifiPhyRxDropTrace (std::string context,
                        Ptr<const Packet>);
   void DevTxTrace (std::string context,
+                   uint32_t,
                    Ptr<const Packet> p,
                    Ptr<NetDevice> tx,
                    Ptr<NetDevice> rx,
