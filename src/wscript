@@ -442,7 +442,7 @@ def apply(self):
 def apply_ns3header(self):
     if self.module is None:
         raise WafError("'module' missing on ns3headers object %s" % self)
-    ns3_dir_node = self.bld.path.find_dir("ns3")
+    ns3_dir_node = self.bld.path.find_or_declare("ns3")
     for filename in set(self.to_list(self.source)):
         src_node = self.path.find_resource(filename)
         if src_node is None:
@@ -616,7 +616,7 @@ class gen_ns3_module_header_task(Task.Task):
 @TaskGen.after_method('process_rule')
 def apply_ns3moduleheader(self):
     ## get all of the ns3 headers
-    ns3_dir_node = self.bld.path.find_dir("ns3")
+    ns3_dir_node = self.bld.path.find_or_declare("ns3")
     all_headers_inputs = []
     found_the_module = False
     for ns3headers in self.bld.all_task_gen:
