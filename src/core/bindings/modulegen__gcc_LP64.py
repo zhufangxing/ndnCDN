@@ -2489,10 +2489,10 @@ def register_Ns3SystemThread_methods(root_module, cls):
     return
 
 def register_Ns3Time_methods(root_module, cls):
-    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
+    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t', u'right'))
     cls.add_binary_numeric_operator('+', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('-', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
-    cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
+    cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t', u'right'))
     cls.add_binary_comparison_operator('<')
     cls.add_binary_comparison_operator('>')
     cls.add_binary_comparison_operator('!=')
@@ -3753,8 +3753,8 @@ def register_Ns3IntegerValue_methods(root_module, cls):
     cls.add_constructor([])
     ## integer.h (module 'core'): ns3::IntegerValue::IntegerValue(ns3::IntegerValue const & arg0) [copy constructor]
     cls.add_constructor([param('ns3::IntegerValue const &', 'arg0')])
-    ## integer.h (module 'core'): ns3::IntegerValue::IntegerValue(int64_t const & value) [constructor]
-    cls.add_constructor([param('int64_t const &', 'value')])
+    ## integer.h (module 'core'): ns3::IntegerValue::IntegerValue(int64_t value) [constructor]
+    cls.add_constructor([param('int64_t', 'value')])
     ## integer.h (module 'core'): ns3::Ptr<ns3::AttributeValue> ns3::IntegerValue::Copy() const [member function]
     cls.add_method('Copy', 
                    'ns3::Ptr< ns3::AttributeValue >', 
@@ -3775,10 +3775,10 @@ def register_Ns3IntegerValue_methods(root_module, cls):
                    'std::string', 
                    [param('ns3::Ptr< ns3::AttributeChecker const >', 'checker')], 
                    is_const=True, is_virtual=True)
-    ## integer.h (module 'core'): void ns3::IntegerValue::Set(int64_t const & value) [member function]
+    ## integer.h (module 'core'): void ns3::IntegerValue::Set(int64_t value) [member function]
     cls.add_method('Set', 
                    'void', 
-                   [param('int64_t const &', 'value')])
+                   [param('int64_t', 'value')])
     return
 
 def register_Ns3ListScheduler_methods(root_module, cls):
@@ -4468,8 +4468,8 @@ def register_Ns3UintegerValue_methods(root_module, cls):
     cls.add_constructor([])
     ## uinteger.h (module 'core'): ns3::UintegerValue::UintegerValue(ns3::UintegerValue const & arg0) [copy constructor]
     cls.add_constructor([param('ns3::UintegerValue const &', 'arg0')])
-    ## uinteger.h (module 'core'): ns3::UintegerValue::UintegerValue(uint64_t const & value) [constructor]
-    cls.add_constructor([param('uint64_t const &', 'value')])
+    ## uinteger.h (module 'core'): ns3::UintegerValue::UintegerValue(uint64_t value) [constructor]
+    cls.add_constructor([param('uint64_t', 'value')])
     ## uinteger.h (module 'core'): ns3::Ptr<ns3::AttributeValue> ns3::UintegerValue::Copy() const [member function]
     cls.add_method('Copy', 
                    'ns3::Ptr< ns3::AttributeValue >', 
@@ -4490,10 +4490,10 @@ def register_Ns3UintegerValue_methods(root_module, cls):
                    'std::string', 
                    [param('ns3::Ptr< ns3::AttributeChecker const >', 'checker')], 
                    is_const=True, is_virtual=True)
-    ## uinteger.h (module 'core'): void ns3::UintegerValue::Set(uint64_t const & value) [member function]
+    ## uinteger.h (module 'core'): void ns3::UintegerValue::Set(uint64_t value) [member function]
     cls.add_method('Set', 
                    'void', 
-                   [param('uint64_t const &', 'value')])
+                   [param('uint64_t', 'value')])
     return
 
 def register_Ns3Vector2DChecker_methods(root_module, cls):

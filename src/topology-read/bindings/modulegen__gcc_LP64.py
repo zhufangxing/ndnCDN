@@ -86,6 +86,8 @@ def register_types(module):
     module.add_class('SimpleRefCount', automatic_type_narrowing=True, import_from_module='ns.core', template_parameters=['ns3::CallbackImplBase', 'ns3::empty', 'ns3::DefaultDeleter<ns3::CallbackImplBase>'], parent=root_module['ns3::empty'], memory_policy=cppclass.ReferenceCountingMethodsPolicy(incref_method='Ref', decref_method='Unref', peekref_method='GetReferenceCount'))
     ## simple-ref-count.h (module 'core'): ns3::SimpleRefCount<ns3::Hash::Implementation, ns3::empty, ns3::DefaultDeleter<ns3::Hash::Implementation> > [class]
     module.add_class('SimpleRefCount', automatic_type_narrowing=True, import_from_module='ns.core', template_parameters=['ns3::Hash::Implementation', 'ns3::empty', 'ns3::DefaultDeleter<ns3::Hash::Implementation>'], parent=root_module['ns3::empty'], memory_policy=cppclass.ReferenceCountingMethodsPolicy(incref_method='Ref', decref_method='Unref', peekref_method='GetReferenceCount'))
+    ## simple-ref-count.h (module 'core'): ns3::SimpleRefCount<ns3::TopologyReader, ns3::empty, ns3::DefaultDeleter<ns3::TopologyReader> > [class]
+    module.add_class('SimpleRefCount', automatic_type_narrowing=True, template_parameters=['ns3::TopologyReader', 'ns3::empty', 'ns3::DefaultDeleter<ns3::TopologyReader>'], parent=root_module['ns3::empty'], memory_policy=cppclass.ReferenceCountingMethodsPolicy(incref_method='Ref', decref_method='Unref', peekref_method='GetReferenceCount'))
     ## simple-ref-count.h (module 'core'): ns3::SimpleRefCount<ns3::TraceSourceAccessor, ns3::empty, ns3::DefaultDeleter<ns3::TraceSourceAccessor> > [class]
     module.add_class('SimpleRefCount', automatic_type_narrowing=True, import_from_module='ns.core', template_parameters=['ns3::TraceSourceAccessor', 'ns3::empty', 'ns3::DefaultDeleter<ns3::TraceSourceAccessor>'], parent=root_module['ns3::empty'], memory_policy=cppclass.ReferenceCountingMethodsPolicy(incref_method='Ref', decref_method='Unref', peekref_method='GetReferenceCount'))
     ## nstime.h (module 'core'): ns3::Time [class]
@@ -95,7 +97,7 @@ def register_types(module):
     ## nstime.h (module 'core'): ns3::Time [class]
     root_module['ns3::Time'].implicitly_converts_to(root_module['ns3::int64x64_t'])
     ## topology-reader.h (module 'topology-read'): ns3::TopologyReader [class]
-    module.add_class('TopologyReader', parent=root_module['ns3::Object'])
+    module.add_class('TopologyReader', parent=root_module['ns3::SimpleRefCount< ns3::TopologyReader, ns3::empty, ns3::DefaultDeleter<ns3::TopologyReader> >'])
     ## topology-reader.h (module 'topology-read'): ns3::TopologyReader::Link [class]
     module.add_class('Link', outer_class=root_module['ns3::TopologyReader'])
     ## trace-source-accessor.h (module 'core'): ns3::TraceSourceAccessor [class]
@@ -152,7 +154,7 @@ def register_types(module):
     module.add_class('AddressChecker', import_from_module='ns.network', parent=root_module['ns3::AttributeChecker'])
     ## address.h (module 'network'): ns3::AddressValue [class]
     module.add_class('AddressValue', import_from_module='ns.network', parent=root_module['ns3::AttributeValue'])
-    module.add_container('std::map< std::string, std::string >', ('std::string', 'std::string'), container_type=u'map')
+    module.add_container('std::map< std::string, std::string >', ('std::string', 'std::string'), container_type='map')
     
     ## Register a nested module for the namespace FatalImpl
     
@@ -175,12 +177,12 @@ def register_types_ns3_Hash(module):
     
     ## hash-function.h (module 'core'): ns3::Hash::Implementation [class]
     module.add_class('Implementation', import_from_module='ns.core', parent=root_module['ns3::SimpleRefCount< ns3::Hash::Implementation, ns3::empty, ns3::DefaultDeleter<ns3::Hash::Implementation> >'])
-    typehandlers.add_type_alias(u'uint32_t ( * ) ( char const *, size_t ) *', u'ns3::Hash::Hash32Function_ptr')
-    typehandlers.add_type_alias(u'uint32_t ( * ) ( char const *, size_t ) **', u'ns3::Hash::Hash32Function_ptr*')
-    typehandlers.add_type_alias(u'uint32_t ( * ) ( char const *, size_t ) *&', u'ns3::Hash::Hash32Function_ptr&')
-    typehandlers.add_type_alias(u'uint64_t ( * ) ( char const *, size_t ) *', u'ns3::Hash::Hash64Function_ptr')
-    typehandlers.add_type_alias(u'uint64_t ( * ) ( char const *, size_t ) **', u'ns3::Hash::Hash64Function_ptr*')
-    typehandlers.add_type_alias(u'uint64_t ( * ) ( char const *, size_t ) *&', u'ns3::Hash::Hash64Function_ptr&')
+    typehandlers.add_type_alias('uint32_t ( * ) ( char const *, size_t ) *', 'ns3::Hash::Hash32Function_ptr')
+    typehandlers.add_type_alias('uint32_t ( * ) ( char const *, size_t ) **', 'ns3::Hash::Hash32Function_ptr*')
+    typehandlers.add_type_alias('uint32_t ( * ) ( char const *, size_t ) *&', 'ns3::Hash::Hash32Function_ptr&')
+    typehandlers.add_type_alias('uint64_t ( * ) ( char const *, size_t ) *', 'ns3::Hash::Hash64Function_ptr')
+    typehandlers.add_type_alias('uint64_t ( * ) ( char const *, size_t ) **', 'ns3::Hash::Hash64Function_ptr*')
+    typehandlers.add_type_alias('uint64_t ( * ) ( char const *, size_t ) *&', 'ns3::Hash::Hash64Function_ptr&')
     
     ## Register a nested module for the namespace Function
     
@@ -229,6 +231,7 @@ def register_methods(root_module):
     register_Ns3SimpleRefCount__Ns3AttributeValue_Ns3Empty_Ns3DefaultDeleter__lt__ns3AttributeValue__gt___methods(root_module, root_module['ns3::SimpleRefCount< ns3::AttributeValue, ns3::empty, ns3::DefaultDeleter<ns3::AttributeValue> >'])
     register_Ns3SimpleRefCount__Ns3CallbackImplBase_Ns3Empty_Ns3DefaultDeleter__lt__ns3CallbackImplBase__gt___methods(root_module, root_module['ns3::SimpleRefCount< ns3::CallbackImplBase, ns3::empty, ns3::DefaultDeleter<ns3::CallbackImplBase> >'])
     register_Ns3SimpleRefCount__Ns3HashImplementation_Ns3Empty_Ns3DefaultDeleter__lt__ns3HashImplementation__gt___methods(root_module, root_module['ns3::SimpleRefCount< ns3::Hash::Implementation, ns3::empty, ns3::DefaultDeleter<ns3::Hash::Implementation> >'])
+    register_Ns3SimpleRefCount__Ns3TopologyReader_Ns3Empty_Ns3DefaultDeleter__lt__ns3TopologyReader__gt___methods(root_module, root_module['ns3::SimpleRefCount< ns3::TopologyReader, ns3::empty, ns3::DefaultDeleter<ns3::TopologyReader> >'])
     register_Ns3SimpleRefCount__Ns3TraceSourceAccessor_Ns3Empty_Ns3DefaultDeleter__lt__ns3TraceSourceAccessor__gt___methods(root_module, root_module['ns3::SimpleRefCount< ns3::TraceSourceAccessor, ns3::empty, ns3::DefaultDeleter<ns3::TraceSourceAccessor> >'])
     register_Ns3Time_methods(root_module, root_module['ns3::Time'])
     register_Ns3TopologyReader_methods(root_module, root_module['ns3::TopologyReader'])
@@ -914,6 +917,29 @@ def register_Ns3NodeContainer_methods(root_module, cls):
                    'uint32_t', 
                    [], 
                    is_const=True)
+    ## node-container.h (module 'network'): __gnu_cxx::__normal_iterator<const ns3::Ptr<ns3::Node>*,std::vector<ns3::Ptr<ns3::Node>, std::allocator<ns3::Ptr<ns3::Node> > > > ns3::NodeContainer::begin() const [member function]
+    cls.add_method('begin', 
+                   '__gnu_cxx::__normal_iterator< ns3::Ptr< ns3::Node > const, std::vector< ns3::Ptr< ns3::Node > > >', 
+                   [], 
+                   is_const=True)
+    ## node-container.h (module 'network'): __gnu_cxx::__normal_iterator<ns3::Ptr<ns3::Node>*,std::vector<ns3::Ptr<ns3::Node>, std::allocator<ns3::Ptr<ns3::Node> > > > ns3::NodeContainer::begin() [member function]
+    cls.add_method('begin', 
+                   '__gnu_cxx::__normal_iterator< ns3::Ptr< ns3::Node >, std::vector< ns3::Ptr< ns3::Node > > >', 
+                   [])
+    ## node-container.h (module 'network'): __gnu_cxx::__normal_iterator<const ns3::Ptr<ns3::Node>*,std::vector<ns3::Ptr<ns3::Node>, std::allocator<ns3::Ptr<ns3::Node> > > > ns3::NodeContainer::end() const [member function]
+    cls.add_method('end', 
+                   '__gnu_cxx::__normal_iterator< ns3::Ptr< ns3::Node > const, std::vector< ns3::Ptr< ns3::Node > > >', 
+                   [], 
+                   is_const=True)
+    ## node-container.h (module 'network'): __gnu_cxx::__normal_iterator<ns3::Ptr<ns3::Node>*,std::vector<ns3::Ptr<ns3::Node>, std::allocator<ns3::Ptr<ns3::Node> > > > ns3::NodeContainer::end() [member function]
+    cls.add_method('end', 
+                   '__gnu_cxx::__normal_iterator< ns3::Ptr< ns3::Node >, std::vector< ns3::Ptr< ns3::Node > > >', 
+                   [])
+    ## node-container.h (module 'network'): uint32_t ns3::NodeContainer::size() const [member function]
+    cls.add_method('size', 
+                   'uint32_t', 
+                   [], 
+                   is_const=True)
     return
 
 def register_Ns3ObjectBase_methods(root_module, cls):
@@ -1288,18 +1314,18 @@ def register_Ns3Empty_methods(root_module, cls):
     return
 
 def register_Ns3Int64x64_t_methods(root_module, cls):
-    cls.add_binary_numeric_operator('*', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
-    cls.add_binary_numeric_operator('+', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
-    cls.add_binary_numeric_operator('-', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
+    cls.add_binary_numeric_operator('*', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', 'right'))
+    cls.add_binary_numeric_operator('+', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', 'right'))
+    cls.add_binary_numeric_operator('-', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', 'right'))
     cls.add_unary_numeric_operator('-')
-    cls.add_binary_numeric_operator('/', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
+    cls.add_binary_numeric_operator('/', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', 'right'))
     cls.add_binary_comparison_operator('<')
     cls.add_binary_comparison_operator('>')
     cls.add_binary_comparison_operator('!=')
-    cls.add_inplace_numeric_operator('*=', param('ns3::int64x64_t const &', u'right'))
-    cls.add_inplace_numeric_operator('+=', param('ns3::int64x64_t const &', u'right'))
-    cls.add_inplace_numeric_operator('-=', param('ns3::int64x64_t const &', u'right'))
-    cls.add_inplace_numeric_operator('/=', param('ns3::int64x64_t const &', u'right'))
+    cls.add_inplace_numeric_operator('*=', param('ns3::int64x64_t const &', 'right'))
+    cls.add_inplace_numeric_operator('+=', param('ns3::int64x64_t const &', 'right'))
+    cls.add_inplace_numeric_operator('-=', param('ns3::int64x64_t const &', 'right'))
+    cls.add_inplace_numeric_operator('/=', param('ns3::int64x64_t const &', 'right'))
     cls.add_output_stream_operator()
     cls.add_binary_comparison_operator('<=')
     cls.add_binary_comparison_operator('==')
@@ -1480,6 +1506,18 @@ def register_Ns3SimpleRefCount__Ns3HashImplementation_Ns3Empty_Ns3DefaultDeleter
                    is_static=True)
     return
 
+def register_Ns3SimpleRefCount__Ns3TopologyReader_Ns3Empty_Ns3DefaultDeleter__lt__ns3TopologyReader__gt___methods(root_module, cls):
+    ## simple-ref-count.h (module 'core'): ns3::SimpleRefCount<ns3::TopologyReader, ns3::empty, ns3::DefaultDeleter<ns3::TopologyReader> >::SimpleRefCount() [constructor]
+    cls.add_constructor([])
+    ## simple-ref-count.h (module 'core'): ns3::SimpleRefCount<ns3::TopologyReader, ns3::empty, ns3::DefaultDeleter<ns3::TopologyReader> >::SimpleRefCount(ns3::SimpleRefCount<ns3::TopologyReader, ns3::empty, ns3::DefaultDeleter<ns3::TopologyReader> > const & o) [copy constructor]
+    cls.add_constructor([param('ns3::SimpleRefCount< ns3::TopologyReader, ns3::empty, ns3::DefaultDeleter< ns3::TopologyReader > > const &', 'o')])
+    ## simple-ref-count.h (module 'core'): static void ns3::SimpleRefCount<ns3::TopologyReader, ns3::empty, ns3::DefaultDeleter<ns3::TopologyReader> >::Cleanup() [member function]
+    cls.add_method('Cleanup', 
+                   'void', 
+                   [], 
+                   is_static=True)
+    return
+
 def register_Ns3SimpleRefCount__Ns3TraceSourceAccessor_Ns3Empty_Ns3DefaultDeleter__lt__ns3TraceSourceAccessor__gt___methods(root_module, cls):
     ## simple-ref-count.h (module 'core'): ns3::SimpleRefCount<ns3::TraceSourceAccessor, ns3::empty, ns3::DefaultDeleter<ns3::TraceSourceAccessor> >::SimpleRefCount() [constructor]
     cls.add_constructor([])
@@ -1493,15 +1531,15 @@ def register_Ns3SimpleRefCount__Ns3TraceSourceAccessor_Ns3Empty_Ns3DefaultDelete
     return
 
 def register_Ns3Time_methods(root_module, cls):
-    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
-    cls.add_binary_numeric_operator('+', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
-    cls.add_binary_numeric_operator('-', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
-    cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
+    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', 'right'))
+    cls.add_binary_numeric_operator('+', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', 'right'))
+    cls.add_binary_numeric_operator('-', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', 'right'))
+    cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', 'right'))
     cls.add_binary_comparison_operator('<')
     cls.add_binary_comparison_operator('>')
     cls.add_binary_comparison_operator('!=')
-    cls.add_inplace_numeric_operator('+=', param('ns3::Time const &', u'right'))
-    cls.add_inplace_numeric_operator('-=', param('ns3::Time const &', u'right'))
+    cls.add_inplace_numeric_operator('+=', param('ns3::Time const &', 'right'))
+    cls.add_inplace_numeric_operator('-=', param('ns3::Time const &', 'right'))
     cls.add_output_stream_operator()
     cls.add_binary_comparison_operator('<=')
     cls.add_binary_comparison_operator('==')
@@ -1702,11 +1740,6 @@ def register_Ns3TopologyReader_methods(root_module, cls):
                    'std::string', 
                    [], 
                    is_const=True)
-    ## topology-reader.h (module 'topology-read'): static ns3::TypeId ns3::TopologyReader::GetTypeId() [member function]
-    cls.add_method('GetTypeId', 
-                   'ns3::TypeId', 
-                   [], 
-                   is_static=True)
     ## topology-reader.h (module 'topology-read'): std::_List_const_iterator<ns3::TopologyReader::Link> ns3::TopologyReader::LinksBegin() const [member function]
     cls.add_method('LinksBegin', 
                    'std::_List_const_iterator< ns3::TopologyReader::Link >', 
@@ -1741,6 +1774,8 @@ def register_Ns3TopologyReader_methods(root_module, cls):
 def register_Ns3TopologyReaderLink_methods(root_module, cls):
     ## topology-reader.h (module 'topology-read'): ns3::TopologyReader::Link::Link(ns3::TopologyReader::Link const & arg0) [copy constructor]
     cls.add_constructor([param('ns3::TopologyReader::Link const &', 'arg0')])
+    ## topology-reader.h (module 'topology-read'): ns3::TopologyReader::Link::Link() [constructor]
+    cls.add_constructor([])
     ## topology-reader.h (module 'topology-read'): ns3::TopologyReader::Link::Link(ns3::Ptr<ns3::Node> fromPtr, std::string const & fromName, ns3::Ptr<ns3::Node> toPtr, std::string const & toName) [constructor]
     cls.add_constructor([param('ns3::Ptr< ns3::Node >', 'fromPtr'), param('std::string const &', 'fromName'), param('ns3::Ptr< ns3::Node >', 'toPtr'), param('std::string const &', 'toName')])
     ## topology-reader.h (module 'topology-read'): std::_Rb_tree_const_iterator<std::pair<const std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::basic_string<char, std::char_traits<char>, std::allocator<char> > > > ns3::TopologyReader::Link::AttributesBegin() [member function]
@@ -1761,6 +1796,11 @@ def register_Ns3TopologyReaderLink_methods(root_module, cls):
                    'bool', 
                    [param('std::string const &', 'name'), param('std::string &', 'value')], 
                    is_const=True)
+    ## topology-reader.h (module 'topology-read'): ns3::Ptr<ns3::NetDevice> ns3::TopologyReader::Link::GetFromNetDevice() const [member function]
+    cls.add_method('GetFromNetDevice', 
+                   'ns3::Ptr< ns3::NetDevice >', 
+                   [], 
+                   is_const=True)
     ## topology-reader.h (module 'topology-read'): ns3::Ptr<ns3::Node> ns3::TopologyReader::Link::GetFromNode() const [member function]
     cls.add_method('GetFromNode', 
                    'ns3::Ptr< ns3::Node >', 
@@ -1769,6 +1809,11 @@ def register_Ns3TopologyReaderLink_methods(root_module, cls):
     ## topology-reader.h (module 'topology-read'): std::string ns3::TopologyReader::Link::GetFromNodeName() const [member function]
     cls.add_method('GetFromNodeName', 
                    'std::string', 
+                   [], 
+                   is_const=True)
+    ## topology-reader.h (module 'topology-read'): ns3::Ptr<ns3::NetDevice> ns3::TopologyReader::Link::GetToNetDevice() const [member function]
+    cls.add_method('GetToNetDevice', 
+                   'ns3::Ptr< ns3::NetDevice >', 
                    [], 
                    is_const=True)
     ## topology-reader.h (module 'topology-read'): ns3::Ptr<ns3::Node> ns3::TopologyReader::Link::GetToNode() const [member function]
@@ -1785,6 +1830,10 @@ def register_Ns3TopologyReaderLink_methods(root_module, cls):
     cls.add_method('SetAttribute', 
                    'void', 
                    [param('std::string const &', 'name'), param('std::string const &', 'value')])
+    ## topology-reader.h (module 'topology-read'): void ns3::TopologyReader::Link::SetNetDevices(ns3::Ptr<ns3::NetDevice> from, ns3::Ptr<ns3::NetDevice> to) [member function]
+    cls.add_method('SetNetDevices', 
+                   'void', 
+                   [param('ns3::Ptr< ns3::NetDevice >', 'from'), param('ns3::Ptr< ns3::NetDevice >', 'to')])
     return
 
 def register_Ns3TraceSourceAccessor_methods(root_module, cls):
@@ -1975,11 +2024,6 @@ def register_Ns3EmptyAttributeValue_methods(root_module, cls):
     return
 
 def register_Ns3InetTopologyReader_methods(root_module, cls):
-    ## inet-topology-reader.h (module 'topology-read'): static ns3::TypeId ns3::InetTopologyReader::GetTypeId() [member function]
-    cls.add_method('GetTypeId', 
-                   'ns3::TypeId', 
-                   [], 
-                   is_static=True)
     ## inet-topology-reader.h (module 'topology-read'): ns3::InetTopologyReader::InetTopologyReader() [constructor]
     cls.add_constructor([])
     ## inet-topology-reader.h (module 'topology-read'): ns3::NodeContainer ns3::InetTopologyReader::Read() [member function]
@@ -2365,11 +2409,6 @@ def register_Ns3Node_methods(root_module, cls):
     return
 
 def register_Ns3OrbisTopologyReader_methods(root_module, cls):
-    ## orbis-topology-reader.h (module 'topology-read'): static ns3::TypeId ns3::OrbisTopologyReader::GetTypeId() [member function]
-    cls.add_method('GetTypeId', 
-                   'ns3::TypeId', 
-                   [], 
-                   is_static=True)
     ## orbis-topology-reader.h (module 'topology-read'): ns3::OrbisTopologyReader::OrbisTopologyReader() [constructor]
     cls.add_constructor([])
     ## orbis-topology-reader.h (module 'topology-read'): ns3::NodeContainer ns3::OrbisTopologyReader::Read() [member function]
@@ -2380,11 +2419,6 @@ def register_Ns3OrbisTopologyReader_methods(root_module, cls):
     return
 
 def register_Ns3RocketfuelTopologyReader_methods(root_module, cls):
-    ## rocketfuel-topology-reader.h (module 'topology-read'): static ns3::TypeId ns3::RocketfuelTopologyReader::GetTypeId() [member function]
-    cls.add_method('GetTypeId', 
-                   'ns3::TypeId', 
-                   [], 
-                   is_static=True)
     ## rocketfuel-topology-reader.h (module 'topology-read'): ns3::RocketfuelTopologyReader::RocketfuelTopologyReader() [constructor]
     cls.add_constructor([])
     ## rocketfuel-topology-reader.h (module 'topology-read'): ns3::NodeContainer ns3::RocketfuelTopologyReader::Read() [member function]
