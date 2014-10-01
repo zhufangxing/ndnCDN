@@ -255,6 +255,8 @@ int main ()
                             "import pygccxml; print pygccxml.__version__"],
                             stdout=subprocess.PIPE).communicate()[0]
     pygccxml_version_str = out.strip()
+    if pygccxml_version_str[0] == 'v':
+        pygccxml_version_str = pygccxml_version_str[1:]
     pygccxml_version = tuple([int(x) for x in pygccxml_version_str.split('.')])
     conf.msg('Checking for pygccxml version', pygccxml_version_str)
     if not (pygccxml_version >= REQUIRED_PYGCCXML_VERSION):
@@ -265,7 +267,7 @@ int main ()
         conf.report_optional_feature("pygccxml", "Python API Scanning Support", False,
                                      "pygccxml too old")
         return
-    
+
 
     ## Check gccxml version
     try:
@@ -409,7 +411,7 @@ class gen_ns3_compat_pymod_task(Task.Task):
     """Generates a 'ns3.py' compatibility module."""
     before = 'cxx'
     color = 'BLUE'
-    
+
     def run(self):
         assert len(self.outputs) == 1
         outfile = file(self.outputs[0].abspath(), "w")
@@ -486,4 +488,3 @@ def build(bld):
 
     # note: the actual build commands for the python bindings are in
     # src/wscript, not here.
-
