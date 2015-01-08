@@ -55,7 +55,15 @@ ComponentList *GetComponentList (void)
   return &components;
 }
 
-
+std::vector<std::string>
+GetLogComponents()
+{
+  std::vector<std::string> retval;
+  for (const auto& i : *GetComponentList()) {
+    retval.push_back(i.first);
+  }
+  return retval;
+}
 
 PrintList::PrintList ()
 {

@@ -37,6 +37,7 @@ namespace
   std::string pageAttributeList;             ///< start Attributes list
   std::string pageGlobalValueList;           ///< start GlobalValue page
   std::string pageTraceSourceList;           ///< start Trace sources page
+  std::string pageLogComponentsList;         ///< start Log components page
   std::string listStart;                     ///< start unordered list
   std::string listStop;                      ///< end unordered list
   std::string listLineStart;                 ///< start unordered list item
@@ -410,6 +411,7 @@ PrintHelp (const char *program_name)
             << "Options:" << std::endl
             << "  --help        : print these options" << std::endl
             << "  --output-text : format output as plain text" << std::endl
+            << "  --log         : print out also list of log components" << std::endl
             << "  --group <group> : print information only for this group" << std::endl;
 }
 
@@ -418,6 +420,7 @@ int main (int argc, char *argv[])
   bool outputText = false;
   char *programName = argv[0];
   std::string group = "";
+  bool logComponents = false;
 
   argv++;
   argc--;
@@ -434,6 +437,10 @@ int main (int argc, char *argv[])
       else if (strcmp(arg, "--output-text") == 0)
         {
           outputText = true;
+        }
+      else if (strcmp(arg, "--log") == 0)
+        {
+          logComponents = true;
         }
       else if (strcmp(arg, "--group") == 0)
         {
@@ -477,6 +484,7 @@ int main (int argc, char *argv[])
       pageAttributeList            = "";
       pageGlobalValueList          = "";
       pageTraceSourceList          = "";
+      pageLogComponentsList        = "";
       listStart                    = "";
       listStop                     = "";
       listLineStart                = "    * ";
@@ -505,6 +513,7 @@ int main (int argc, char *argv[])
       pageAttributeList            = "\\page AttributesList ";
       pageGlobalValueList          = "\\page GlobalValueList ";
       pageTraceSourceList          = "\\page TraceSourceList ";
+      pageLogComponentsList        = "\\page LogComponentList ";
       listStart                    = "<ul>";
       listStop                     = "</ul>";
       listLineStart                = "<li>";
@@ -765,5 +774,21 @@ int main (int argc, char *argv[])
 	    << commentStop << std::endl;
 
 
+  std::cout << commentStart
+            << pageLogComponentsList << "All LogComponents\n"
+            << std::endl
+            << listStart << std::endl;
+
+  for (const auto& logComponent : GetLogComponents())
+    {
+      std::cout << indentHtmlOnly
+                <<   listLineStart
+                <<     boldStart
+                << logComponent
+                <<     boldStop
+                <<   listLineStop << std::endl;
+    }
+  std::cout << listStop    << std::endl
+            << commentStop << std::endl;
   return 0;
 }

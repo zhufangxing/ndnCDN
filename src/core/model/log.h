@@ -25,6 +25,7 @@
 #include <iostream>
 #include <stdint.h>
 #include <map>
+#include <vector>
 
 #include "log-macros-enabled.h"
 #include "log-macros-disabled.h"
@@ -244,6 +245,15 @@ namespace ns3 {
  * variable set as NS_LOG=print-list
  */
 void LogComponentPrintList (void);
+
+/**
+ * \ingroup logging
+ *
+ * Get the list of available logging components that can be used with
+ * the NS_LOG environment variable
+ */
+std::vector<std::string>
+GetLogComponents();
 
 typedef void (*LogTimePrinter)(std::ostream &os);
 typedef void (*LogNodePrinter)(std::ostream &os);
