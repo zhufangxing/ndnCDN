@@ -44,8 +44,6 @@ CDNProducer::GetTypeId(void)
   static TypeId tid =
     TypeId("ns3::ndn::CDNProducer")
       .SetGroupName("Ndn")
-      .SetParent<App>()
-      .AddConstructor<CDNProducer>()
       .AddAttribute("Prefix", "Prefix, for which CDNProducer has the data", StringValue("/"),
                     MakeNameAccessor(&CDNProducer::m_prefix), MakeNameChecker())
       .AddAttribute(
@@ -74,23 +72,15 @@ CDNProducer::CDNProducer()
   NS_LOG_FUNCTION_NOARGS();
 }
 
+CDNProducer::CDNProducer(shared_ptr<Face> face, Ptr<App> app)
+{
+  m_face = face;
+  m_app = app;
+  NS_LOG_FUNCTION_NOARGS();
+}
+
 // inherited from Application base class.
-void
-CDNProducer::StartApplication()
-{
-  NS_LOG_FUNCTION_NOARGS();
-  App::StartApplication();
 
-  FibHelper::AddRoute(GetNode(), m_prefix, m_face, 0);
-}
-
-void
-CDNProducer::StopApplication()
-{
-  NS_LOG_FUNCTION_NOARGS();
-
-  App::StopApplication();
-}
 
 void
 CDNProducer::OnInterest(shared_ptr<const Interest> interest, CDNStore& m_CDNStore)
@@ -99,8 +89,8 @@ CDNProducer::OnInterest(shared_ptr<const Interest> interest, CDNStore& m_CDNStor
 
   NS_LOG_FUNCTION(this << interest);
 
-  if (!m_active)
-    return;
+  //if (!m_active)
+    //return;
   //search in m_CDNStore, whether has the data/file
   if (!m_CDNStore.find(interest->getName().getPrefix(interest->getName().size()-1)).first)
 	{
@@ -130,12 +120,12 @@ CDNProducer::OnInterest(shared_ptr<const Interest> interest, CDNStore& m_CDNStor
 
   data->setSignature(signature);
 
-  NS_LOG_INFO("node(" << GetNode()->GetId() << ") respodning with Data: " << data->getName());
+  //NS_LOG_INFO("node(" << GetNode()->GetId() << ") respodning with Data: " << data->getName());
 
   // to create real wire encoding
   data->wireEncode();
 
-  m_transmittedDatas(data, this, m_face);
+  m_transmittedDatas(data, m_app, m_face);
   m_face->onReceiveData(*data);
 }
 

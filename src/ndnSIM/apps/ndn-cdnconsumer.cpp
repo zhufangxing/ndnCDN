@@ -49,7 +49,6 @@ CDNConsumer::GetTypeId(void)
   static TypeId tid =
     TypeId("ns3::ndn::CDNConsumer")
       .SetGroupName("Ndn")
-      .SetParent<App>()
       .AddAttribute("StartSeq", "Initial sequence number", IntegerValue(0),
                     MakeIntegerAccessor(&CDNConsumer::m_seq), MakeIntegerChecker<int32_t>())
 
@@ -102,6 +101,22 @@ CDNConsumer::CDNConsumer()
   
   m_seqMax = std::numeric_limits<uint32_t>::max();
   m_rtt = CreateObject<RttMeanDeviation>();
+}
+
+CDNConsumer::CDNConsumer(shared_ptr<Face> face, Ptr<App> app)
+  : m_rand(0, std::numeric_limits<uint32_t>::max())
+  , m_seq(0)
+  , m_seqMax(0) // don't request anything
+  , m_frequency(1.0)
+  , m_firstTime(true)
+  , m_random(0)
+{
+  NS_LOG_FUNCTION_NOARGS();
+  
+  m_seqMax = std::numeric_limits<uint32_t>::max();
+  m_rtt = CreateObject<RttMeanDeviation>();
+  m_face = face;
+  m_app = app;
 }
 
 void
@@ -194,7 +209,7 @@ CDNConsumer::StartApplication() // Called at time specified by Start
   NS_LOG_FUNCTION_NOARGS();
 
   // do base stuff
-  App::StartApplication();
+ // App::StartApplication();
 
   ScheduleNextPacket();
 }
@@ -208,7 +223,7 @@ CDNConsumer::StopApplication() // Called at time specified by Stop
   Simulator::Cancel(m_sendEvent);
 
   // cleanup base stuff
-  App::StopApplication();
+  //App::StopApplication();
 }
 
 void
@@ -224,8 +239,8 @@ CDNConsumer::CDNPull(shared_ptr<CDNFile> m_transFile)
 void
 CDNConsumer::SendPacket()
 {
-  if (!m_active)
-    return;
+  //if (!m_active)
+    //return;
 
   NS_LOG_FUNCTION_NOARGS();
 
@@ -264,7 +279,7 @@ CDNConsumer::SendPacket()
 
   WillSendOutInterest(seq);
 
-  m_transmittedInterests(interest, this, m_face);
+  m_transmittedInterests(interest, m_app, m_face);
   m_face->onReceiveInterest(*interest);
 
   ScheduleNextPacket();
@@ -277,8 +292,8 @@ CDNConsumer::SendPacket()
 void
 CDNConsumer::OnData(shared_ptr<const Data> data, shared_ptr<CDNFile> m_transFile)
 {
-  if (!m_active)
-    return;
+  //if (!m_active)
+    //return;
 
   //App::OnData(data); // tracing inside
 
@@ -308,14 +323,14 @@ CDNConsumer::OnData(shared_ptr<const Data> data, shared_ptr<CDNFile> m_transFile
 
   SeqTimeoutsContainer::iterator entry = m_seqLastDelay.find(seq);
   if (entry != m_seqLastDelay.end()) {
-    m_lastRetransmittedInterestDataDelay(this, seq, Simulator::Now() - entry->time, hopCount);
+    m_lastRetransmittedInterestDataDelay(m_app, seq, Simulator::Now() - entry->time, hopCount);
 	//added by zfx
 	m_transFile->setData(*data,seq);
   }
   
   entry = m_seqFullDelay.find(seq);
   if (entry != m_seqFullDelay.end()) {
-    m_firstInterestDataDelay(this, seq, Simulator::Now() - entry->time, m_seqRetxCounts[seq], hopCount);
+    m_firstInterestDataDelay(m_app, seq, Simulator::Now() - entry->time, m_seqRetxCounts[seq], hopCount);
   }
 
   m_seqRetxCounts.erase(seq);

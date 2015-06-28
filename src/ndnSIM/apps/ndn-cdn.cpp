@@ -75,11 +75,14 @@ CDN::GetTypeId(void)
 }
 
 CDN::CDN()
+:m_CDNProducer(m_face, this)
+,m_CDNConsumer(m_face, this)
 {
   NS_LOG_FUNCTION_NOARGS();
   m_CDNStore=CDNStore();
-  m_CDNStore.setNode(CDNConsumer::GetNode());
-  m_CDNStore.setFace(CDNConsumer::m_face);
+  m_CDNStore.setNode(GetNode());
+  m_CDNStore.setFace(m_face);
+
 }
 
 // inherited from Application base class.
@@ -87,10 +90,10 @@ void
 CDN::StartApplication()
 {
   NS_LOG_FUNCTION_NOARGS();
-  CDNConsumer::StartApplication();
+  App::StartApplication();
 
-  FibHelper::AddRoute(CDNConsumer::GetNode(), m_prefix, CDNConsumer::m_face, 0);
-  FibHelper::AddRoute(CDNConsumer::GetNode(), m_prefix2, CDNConsumer::m_face, 0);
+  FibHelper::AddRoute(GetNode(), m_prefix, m_face, 0);
+  FibHelper::AddRoute(GetNode(), m_prefix2, m_face, 0);
 }
 
 void
@@ -98,7 +101,7 @@ CDN::StopApplication()
 {
   NS_LOG_FUNCTION_NOARGS();
 
-  CDNConsumer::StopApplication();
+   App::StopApplication();
 }
 
 void
@@ -108,7 +111,7 @@ CDN::OnInterest(shared_ptr<const Interest> interest)
 
   NS_LOG_FUNCTION(this << interest);
   
-  if (!CDNProducer::m_active)
+  if (!m_active)
     return;
 	
   Name prefix = interest->getName().getSubName(0,3);
@@ -122,7 +125,7 @@ CDN::OnInterest(shared_ptr<const Interest> interest)
 		m_transFiles.push(file);
 		//no file is trasmitted now
 		if (m_transFiles.size()==1)
-			CDNConsumer::CDNPull(m_transFiles.front());
+			m_CDNConsumer.CDNPull(m_transFiles.front());
   }
 	// publish a file , type = 1
 	else if (interest->getName().at(3).toNumber() == 1)
@@ -132,11 +135,11 @@ CDN::OnInterest(shared_ptr<const Interest> interest)
 		m_transFiles.push(file);
 		//no file is trasmitted now
 		if (m_transFiles.size()==1)
-			CDNConsumer::CDNPull(m_transFiles.front());
+			m_CDNConsumer.CDNPull(m_transFiles.front());
 	}
   }
   else
-	CDNProducer::OnInterest(interest, m_CDNStore);
+	m_CDNProducer.OnInterest(interest, m_CDNStore);
   
   
 }
@@ -172,14 +175,14 @@ CDN::OnPushInterest(const Name &interestName)
   // to create real wire encoding
   data->wireEncode();
 
-  CDNProducer::m_transmittedDatas(data, this, CDNProducer::m_face);
-  CDNProducer::m_face->onReceiveData(*data);
+  m_transmittedDatas(data, this, m_face);
+  m_face->onReceiveData(*data);
 }
 
 void
 CDN::OnData(shared_ptr<const Data> data)
 {
-  if (!CDNConsumer::m_active)
+  if (!m_active)
     return;
   Name dataName=data->getName();
   if (data->getName().getSubName(0,2) == m_postfix.getSubName(0, 2) )
@@ -187,7 +190,7 @@ CDN::OnData(shared_ptr<const Data> data)
 	return ;
   else
   {
-	CDNConsumer::OnData(data, m_transFiles.front());
+	m_CDNConsumer.OnData(data, m_transFiles.front());
 	// a file has been transmitted
 	if (m_transFiles.front()->getMaxSize() == m_transFiles.front()->getSize())
 	{
@@ -195,11 +198,11 @@ CDN::OnData(shared_ptr<const Data> data)
     m_transFiles.pop();
 		
 		//add route
-		FibHelper::AddRoute(CDNConsumer::GetNode(), data->getName().getPrefix(data->getName().size()-1), CDNConsumer::m_face, 0);
+		FibHelper::AddRoute(GetNode(), data->getName().getPrefix(data->getName().size()-1), m_face, 0);
 		
 		//transmit next file
 		if (!m_transFiles.empty())
-			CDNConsumer::CDNPull(m_transFiles.front());
+			m_CDNConsumer.CDNPull(m_transFiles.front());
 	}
 	
   }//else end

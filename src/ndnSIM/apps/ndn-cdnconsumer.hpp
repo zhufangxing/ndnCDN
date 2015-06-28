@@ -34,6 +34,11 @@
 #include "ns3/ndnSIM/utils/ndn-rtt-estimator.hpp"
 #include "ns3/ndnSIM/utils/ndn-fw-hop-count-tag.hpp"
 
+#include "ns3/ndnSIM/model/ndn-app-face.hpp"
+#include "ns3/callback.h"
+#include "ns3/traced-callback.h"
+
+
 #include <set>
 #include <map>
 
@@ -49,7 +54,7 @@ namespace ndn {
  * @ingroup ndn-apps
  * \brief NDN application for sending out Interest packets
  */
-class CDNConsumer : public App {
+class CDNConsumer  {
 public:
   static TypeId
   GetTypeId();
@@ -59,6 +64,10 @@ public:
    * Sets up randomizer function and packet sequence number
    */
   CDNConsumer();
+
+  CDNConsumer(shared_ptr<Face> face, Ptr<App> app);
+
+
 
   // From App
   virtual void
@@ -70,6 +79,9 @@ public:
    */
   virtual void
   OnTimeout(uint32_t sequenceNumber);
+
+  void
+  SetFace(shared_ptr<Face> face){ m_face = face;};
 
   /**
    * @brief Actually send packet
@@ -90,6 +102,8 @@ public:
   virtual void
   WillSendOutInterest(uint32_t sequenceNumber);
 
+  void
+  CDNPull(shared_ptr<CDNFile> m_transFile);
 protected:
   // from App
   virtual void
@@ -139,8 +153,21 @@ protected:
   std::string
   GetRandomize() const;
 
-  void
-  CDNPull(shared_ptr<CDNFile> m_transFile);
+  
+
+protected:
+  TracedCallback<shared_ptr<const Interest>, Ptr<App>, shared_ptr<Face>>
+    m_receivedInterests; ///< @brief App-level trace of received Interests
+
+  TracedCallback<shared_ptr<const Data>, Ptr<App>, shared_ptr<Face>>
+    m_receivedDatas; ///< @brief App-level trace of received Data
+
+  TracedCallback<shared_ptr<const Interest>, Ptr<App>, shared_ptr<Face>>
+    m_transmittedInterests; ///< @brief App-level trace of transmitted Interests
+
+  TracedCallback<shared_ptr<const Data>, Ptr<App>, shared_ptr<Face>>
+    m_transmittedDatas; ///< @brief App-level trace of transmitted Data
+
 
 protected:
   UniformVariable m_rand; ///< @brief nonce generator
@@ -161,6 +188,9 @@ protected:
   bool m_firstTime;
   RandomVariable* m_random;
   std::string m_randomType;
+
+  shared_ptr<Face> m_face;
+  Ptr<App> m_app;
 
   /// @cond include_hidden
   /**

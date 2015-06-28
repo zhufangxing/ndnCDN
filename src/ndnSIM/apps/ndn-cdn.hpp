@@ -22,6 +22,7 @@
 
 #include "ns3/ndnSIM/model/ndn-common.hpp"
 
+#include "ndn-app.hpp"
 #include "ndn-cdnconsumer.hpp"
 #include "ndn-cdnproducer.hpp"
 #include "ndn-cdnstore.hpp"
@@ -45,7 +46,7 @@ class CDN;
  * size and name same as in Interest.cation, which replying every incoming Interest
  * with Data packet with a specified size and name same as in Interest.
  */
-class CDN : public CDNConsumer, public CDNProducer {
+class CDN  : public App{
 public:
   static TypeId
   GetTypeId(void);
@@ -83,6 +84,8 @@ private:
 
   uint32_t m_signature;
   Name m_keyLocator;
+  CDNProducer m_CDNProducer;
+  CDNConsumer m_CDNConsumer;
 
 
 };

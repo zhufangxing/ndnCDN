@@ -171,7 +171,7 @@ CDNStore::find(const Name& fileName) const
   
   for (list<shared_ptr<CDNFile>>::const_iterator it = m_CDNStore.begin(); it!=m_CDNStore.end(); it++)
   { 
-	if (**it.getName()==fileName)
+	if ((*it)->getName()==fileName)
 		return {true, **it};
   }
   return {false, **m_CDNStore.end()};
@@ -183,7 +183,7 @@ CDNStore::erase(const Name& exactName)
 {
   for (list<shared_ptr<CDNFile>>::iterator it = m_CDNStore.begin(); it!=m_CDNStore.end(); it++)
   {
-	if (*it->getName()==exactName)
+	if ((*it)->getName()==exactName)
 		m_CDNStore.erase(it);
 		break;
   }

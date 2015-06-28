@@ -25,10 +25,13 @@
 #include "ndn-cdnfile.hpp"
 #include "ndn-cdnstore.hpp"
 #include "ndn-app.hpp"
-#include "ns3/ndnSIM/model/ndn-common.hpp"
 
 #include "ns3/nstime.h"
 #include "ns3/ptr.h"
+#include "ns3/ndnSIM/model/ndn-app-face.hpp"
+
+#include "ns3/callback.h"
+#include "ns3/traced-callback.h"
 
 namespace ns3 {
 namespace ndn {
@@ -44,12 +47,19 @@ class CDNStore;
  * size and name same as in Interest.cation, which replying every incoming Interest
  * with Data packet with a specified size and name same as in Interest.
  */
-class CDNProducer : public App {
+class CDNProducer  {
 public:
   static TypeId
   GetTypeId(void);
 
   CDNProducer();
+
+  CDNProducer(shared_ptr<Face> face, Ptr<App> app);
+
+
+  void 
+  SetFace(shared_ptr<Face> face){ m_face = face; };
+
 
   
 
@@ -58,20 +68,30 @@ public:
   OnInterest(shared_ptr<const Interest> interest, CDNStore& m_CDNStore);
 
 protected:
-  // inherited from Application base class.
-  virtual void
-  StartApplication(); // Called at time specified by Start
+  
 
-  virtual void
-  StopApplication(); // Called at time specified by Stop
+   TracedCallback<shared_ptr<const Interest>, Ptr<App>, shared_ptr<Face>>
+    m_receivedInterests; ///< @brief App-level trace of received Interests
+
+  TracedCallback<shared_ptr<const Data>, Ptr<App>, shared_ptr<Face>>
+    m_receivedDatas; ///< @brief App-level trace of received Data
+
+  TracedCallback<shared_ptr<const Interest>, Ptr<App>, shared_ptr<Face>>
+    m_transmittedInterests; ///< @brief App-level trace of transmitted Interests
+
+  TracedCallback<shared_ptr<const Data>, Ptr<App>, shared_ptr<Face>>
+    m_transmittedDatas; ///< @brief App-level trace of transmitted Data
+
 
 private:
-  Name m_prefix;
-  Name m_postfix;
-  uint32_t m_MaxSize;
-  CDNFile m_file;
+  Name m_prefix;    // not used
+  Name m_postfix;   // not used
+  uint32_t m_MaxSize;   //not used
+  CDNFile m_file;       // not used
   uint32_t m_virtualPayloadSize;
   Time m_freshness;
+  shared_ptr<Face> m_face;
+  Ptr<App> m_app;
 
   uint32_t m_signature;
   Name m_keyLocator;
